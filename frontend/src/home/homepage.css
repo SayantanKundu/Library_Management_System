@@ -1,8 +1,7 @@
-.main-container{
-    height: 100vh;
-    display:flex;
+.home-container{
+    display: flex;
     justify-content: center;
-    align-items: center;
+    padding-top: 100px;
 }
 
 form  { display: table;      }

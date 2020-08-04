@@ -37,7 +37,6 @@ const BookCard = (props) => {
             })
             .then(response => {
                 alert(response.data.message);
-                window.reload();
             })
             .catch(err => {
                 alert(err.response.data.message);
@@ -50,15 +49,17 @@ const BookCard = (props) => {
             <span className="text-style">by</span>
             <h3>{bookInfo.author}</h3>
 
-            {!bookInfo.available && <span className="text-style" style={{ justifyContent: 'center' }}>Unavailable</span>}
-            <button
-                type="button"
-                className="issue-btn"
-                disabled={bookInfo.available ? false : true}
-                onClick={handleIssueClick}>
-                Request Book
+            {!bookInfo.available && <span className="text-style">Unavailable</span>}
+            {!auth.isAdmin &&
+                <button
+                    type="button"
+                    className="issue-btn"
+                    disabled={bookInfo.available ? false : true}
+                    onClick={handleIssueClick}>
+                    Request Book
                 </button>
-            {auth.isAdmin && <button type="button" onClick={handleBookDelete}>Delete</button>}
+            }
+            {auth.isAdmin && <button type="button" className="delete-btn" onClick={handleBookDelete}>Delete</button>}
         </div>
     )
 }

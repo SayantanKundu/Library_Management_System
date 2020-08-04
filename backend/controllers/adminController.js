@@ -1,8 +1,8 @@
 const Book = require('../models/book');
+const User = require('../models/user');
 const IssueRequest = require('../models/issuerequest');
 const Transaction = require('../models/transaction');
 const HttpError = require('../models/error');
-const { Console } = require('console');
 
 exports.addBooks = (req, res, next) => {
     let { name, author } = req.body;
@@ -32,8 +32,10 @@ exports.issueBook = (req, res, next) => {
     let { userName, bookId, bookName, issueId } = req.body;
     console.log(issueId);
 
-    let currentDate = new Date();
-    // currentDate=currentDate.toISOString();
+    let cuurentDate = new Date();
+
+    let dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 14);
 
     const transaction = new Transaction({
         userName: userName,
@@ -42,12 +44,18 @@ exports.issueBook = (req, res, next) => {
             bookName: bookName
         },
         type: 'Borrow',
-        dueDate: currentDate
+        date: cuurentDate,
+        dueDate: dueDate
     });
 
     transaction.save()
         .then(result => {
             IssueRequest.findByIdAndRemove(issueId)
+                .catch(err => {
+                    return next(new HttpError('Internal server error', 500));
+                });
+
+            User.updateOne({ userName: userName }, { $push: { issuedBooks: { bookId: bookId, bookName: bookName } } })
                 .catch(err => {
                     return next(new HttpError('Internal server error', 500));
                 });

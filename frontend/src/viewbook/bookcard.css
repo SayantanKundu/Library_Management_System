@@ -6,7 +6,19 @@
     max-width: 10vw;
 }
 
+.text-style{
+    display: flex;
+    justify-content: center;
+}
+
 .issue-btn{
+    margin-top:5px;
+    margin-left:15% !important;
+    margin-bottom: 5px;
+}
+
+.delete-btn{
+    margin-top:5px;
     margin-left:30%;
     margin-bottom: 5px;
 }

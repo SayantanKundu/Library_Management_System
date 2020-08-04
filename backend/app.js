@@ -22,6 +22,14 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 
+app.use((error, req, res, next) => {
+    if (res.headerSent) {
+        return next(error);
+    }
+    res.status(error.code || 500);
+    res.json({ message: error.message || 'An unknown error occurred !' });
+});
+
 mongoose.connect('mongodb+srv://root:root@cluster0-uaacm.mongodb.net/library?')
     .then(() => { app.listen(4001); })
     .catch((err) => console.log(err))

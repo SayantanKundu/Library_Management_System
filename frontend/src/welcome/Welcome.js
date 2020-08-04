@@ -7,9 +7,30 @@ const Welcome = () => {
     const auth = useContext(AuthContext);
     return (
         <div className="nav-links">
-            {auth.isAdmin && < NavLink to="/addbook" exact>Add a book</NavLink>}
-            <NavLink to="/viewbooks" exact>Show all books</NavLink>
-            <NavLink to="/bookrequest" exact>Book Requests</NavLink>
+
+            <h1>Welcome to the Library</h1>
+            <ul>
+                {auth.isAdmin &&
+                    <li>
+                        <NavLink to="/addbook" exact>Add a book</NavLink>
+                    </li>
+                }
+                <li>
+                    <NavLink to="/viewbooks" exact>Show all books</NavLink>
+                </li>
+                {
+                    auth.isAdmin &&
+                    <li>
+                        <NavLink to="/bookrequest" exact>Book Requests</NavLink>
+                    </li>
+                }
+                {
+                    !auth.isAdmin &&
+                    <li>
+                        <NavLink to="/returnbook" exact>Return Book</NavLink>
+                    </li>
+                }
+            </ul>
         </div >
     )
 }

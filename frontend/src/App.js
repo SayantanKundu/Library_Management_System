@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import HomePage from './home/HomePage';
@@ -7,6 +7,7 @@ import Welcome from './welcome/Welcome';
 import ViewBooks from './viewbook/ViewBooks';
 import Register from './register/Register.js';
 import BookRequests from './bookrequest/BookRequests.js';
+import ReturnBook from './returnbook/ReturnBook.js';
 import { AuthContext } from './context/AuthContext';
 
 function App() {
@@ -14,19 +15,26 @@ function App() {
   const [role, setRole] = useState('');
   const [userName, setUserName] = useState('');
 
-  const login = useCallback((userRole) => {
+  const auth = useContext(AuthContext);
+
+  const login = useCallback((userRole, userName) => {
     setIsLoggedIn(true);
     setRole(userRole);
+    setUserName(userName);
+
   }, []);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
   }, []);
 
-  const setUName = useCallback((userName) => {
-    setUserName(userName);
-  })
+  let sessionIsLoggedIn = sessionStorage.getItem("isLoggedIn");
+  let sessionRole = sessionStorage.getItem("role");
+  let sessionUserName = sessionStorage.getItem("userName");
 
+  if (sessionIsLoggedIn && sessionRole && sessionUserName) {
+    auth.login(sessionRole, sessionUserName);
+  }
 
   return (
     <AuthContext.Provider value={{
@@ -34,10 +42,10 @@ function App() {
       isAdmin: role === 'admin' ? true : false,
       userName: userName,
       login: login,
-      logout: logout,
-      setUserName: setUName
+      logout: logout
     }}>
       <BrowserRouter>
+        <span>Welcome {userName} to the library</span>
         <Switch>
           <Route path="/home" exact component={HomePage} />
 
@@ -50,6 +58,8 @@ function App() {
           <Route path="/register" exact component={Register} />
 
           <Route path="/bookrequest" exact component={BookRequests} />
+
+          <Route path="/returnBook" exact component={ReturnBook} />
 
           <Redirect to="/home" />
         </Switch>

@@ -24,9 +24,14 @@ const HomePage = (props) => {
         setPassword(event.target.value);
     }
 
+    const storeInSession = () => {
+        sessionStorage.setItem("userName", userField);
+        sessionStorage.setItem("isLoggedIn", true);
+        sessionStorage.setItem("role", role);
+    }
+
     const loginClick = () => {
         let userRole = document.getElementById('role').value;
-        auth.login(userRole);
         axios.get('http://localhost:4001/api/user/login',
             {
                 params: {
@@ -35,8 +40,8 @@ const HomePage = (props) => {
                     role: role
                 }
             }).then(response => {
-                auth.setUserName(userField);
-                localStorage.setItem("userName", userField);
+                auth.login(userRole, userField);
+                storeInSession();
                 props.history.push('/welcome');
             }).catch(err => {
                 console.log(err);
@@ -68,13 +73,18 @@ const HomePage = (props) => {
                 </React.Fragment> : <br />
                 }
 
-                <button type="button" onClick={loginClick}>Login</button>
+                <p>
+                    <button type="button" onClick={loginClick}>Login</button>
+                    <div style={{ paddingTop: '20px' }}>
+                        <span>Not registered yet?</span>
+                        <NavLink style={{ paddingLeft: '20px' }} to="/register">Register Here</NavLink>
+                    </div>
+                </p>
             </form>
 
             <br />
 
-            <span>Not registered yet?</span>
-            <NavLink to="/register">Register Here</NavLink>
+
         </div>
     )
 }

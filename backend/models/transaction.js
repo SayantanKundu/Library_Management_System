@@ -21,7 +21,10 @@ const transactionSchema = new Schema({
         type: String,
         required: true
     },
-    dueDate:{
+    dueDate: {
+        type: Date,
+    },
+    date: {
         type: Date,
         required: true
     }

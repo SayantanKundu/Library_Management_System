@@ -11,4 +11,8 @@ userRoutes.get('/login', userController.loginUser);
 
 userRoutes.post('/issuebookrequest', userController.issueBookRequest);
 
+userRoutes.get('/issuedbooks', userController.getIssuedBooks);
+
+userRoutes.put('/returnbook', userController.returnBook);
+
 module.exports = userRoutes;

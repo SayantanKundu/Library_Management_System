@@ -2,6 +2,7 @@ const Book = require('../models/book');
 const IssueRequest = require('../models/issuerequest');
 const User = require('../models/user');
 const HttpError = require('../models/error');
+const Transaction = require('../models/transaction');
 
 exports.getBooks = (req, res, next) => {
     Book.find()
@@ -55,7 +56,7 @@ exports.loginUser = (req, res, next) => {
                 return next(new HttpError('Invalid username', 404));
             }
         })
-        .catch(err=>{
+        .catch(err => {
             return next(new HttpError('Internal server error', 500));
         })
 }
@@ -63,9 +64,6 @@ exports.loginUser = (req, res, next) => {
 exports.issueBookRequest = (req, res, next) => {
     let { id, bookName, userName } = req.body;
 
-    console.log(id);
-    console.log(bookName);
-    console.log(userName);
     const issueRequest = new IssueRequest({
         userName: userName,
         bookDetails: {
@@ -74,11 +72,75 @@ exports.issueBookRequest = (req, res, next) => {
         }
     })
 
-    issueRequest.save()
-        .then(result => {
-            res.json({ message: 'Issue request generated successfully for ' + bookName });
+    IssueRequest.findOne({ $and: [{ userName: userName }, { bookDetails: { bookId: id, bookName: bookName } }] })
+        .then(issue => {
+            if (issue === null) {
+                issueRequest.save()
+                    .then(result => {
+                        res.json({ message: 'Issue request generated successfully for ' + bookName });
+                    })
+                    .catch(err => {
+                        return next(new HttpError('Internal server error', 500));
+                    })
+            }
         })
         .catch(err => {
+            console.log(err);
+            return next(new HttpError('Internal server error', 500));
+        });
+}
+
+exports.getIssuedBooks = (req, res, next) => {
+    let { userName } = req.query;
+
+    User.findOne({ userName: userName })
+        .then(result => {
+            if (result) {
+                let issuedbooks = result.issuedBooks;
+                if (issuedbooks.length != 0) {
+                    res.json({ result: issuedbooks });
+                }
+            }
+        }).catch(err => {
             return next(new HttpError('Internal server error', 500));
         })
+}
+
+exports.returnBook = (req, res, next) => {
+    let { userName, bookId, bookName } = req.body;
+    let currentDate = new Date();
+
+    const transaction = new Transaction({
+        userName: userName,
+        bookDetails: {
+            bookId: bookId,
+            bookName: bookName
+        },
+        type: 'Return',
+        date: currentDate
+    });
+
+    transaction.save()
+        .then(result => {
+            User.findOne({ userName: userName })
+                .then(user => {
+                    if (user) {
+                        let updatedIssuedBook = user.issuedBooks.filter(book => {
+                            return book.bookId !== bookId;
+                        });
+                        User.updateOne({ userName: userName }, { issuedBooks: updatedIssuedBook })
+                            .catch(err => {
+                                return next(new HttpError('Internal server error', 500));
+                            })
+                    }
+                })
+
+            Book.findByIdAndUpdate(bookId, { available: true })
+                .then(result => {
+                    res.json({ message: bookName + ' has been returned successfully ' })
+                })
+                .catch(err => {
+                    return next(new HttpError('Internal server error', 500));
+                })
+        });
 }

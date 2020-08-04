@@ -24,11 +24,7 @@ const HomePage = (props) => {
         setPassword(event.target.value);
     }
 
-    const storeInSession = () => {
-        sessionStorage.setItem("userName", userField);
-        sessionStorage.setItem("isLoggedIn", true);
-        sessionStorage.setItem("role", role);
-    }
+    
 
     const loginClick = () => {
         let userRole = document.getElementById('role').value;
@@ -41,7 +37,6 @@ const HomePage = (props) => {
                 }
             }).then(response => {
                 auth.login(userRole, userField);
-                storeInSession();
                 props.history.push('/welcome');
             }).catch(err => {
                 console.log(err);

@@ -5,10 +5,15 @@ import { AuthContext } from '../context/AuthContext';
 
 const Welcome = () => {
     const auth = useContext(AuthContext);
+
+    const handleLogoutClick=()=>{
+        auth.logout();
+    };
+
     return (
         <div className="nav-links">
 
-            <h1>Welcome to the Library</h1>
+            <h1>Welcome to the Library {auth.userName}</h1>
             <ul>
                 {auth.isAdmin &&
                     <li>
@@ -31,6 +36,7 @@ const Welcome = () => {
                     </li>
                 }
             </ul>
+            <NavLink to="/home" className="logout-btn" onClick={handleLogoutClick}>Logout</NavLink>
         </div >
     )
 }

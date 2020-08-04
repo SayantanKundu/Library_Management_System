@@ -2,3 +2,9 @@
     display: inherit;
     align-items: center;
 }
+
+.logout-btn{
+    position: fixed;
+    right: 30px;
+    top: 50px;
+}

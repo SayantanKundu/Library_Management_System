@@ -19,12 +19,15 @@ const BookRequests = () => {
 
     return (
         <div>
-            {requests.map(req => {
-                return (<React.Fragment>
-                    <RequestCard key={req._id} requestInfo={req}></RequestCard>
-                </React.Fragment>)
-            })
-            }
+            <h1>Book Requests</h1>
+            <div>
+                {requests.map(req => {
+                    return (<React.Fragment>
+                        <RequestCard key={req._id} requestInfo={req}></RequestCard>
+                    </React.Fragment>)
+                })
+                }
+            </div>
         </div>
     )
 }

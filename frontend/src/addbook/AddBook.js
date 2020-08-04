@@ -12,6 +12,7 @@ const AddBook = () => {
             author: author
         }).then(response => {
             alert(response.data.message);
+            window.location.reload();
         }).catch(err => {
             alert(err.response.data.message);
         })

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import HomePage from './home/HomePage';
@@ -21,20 +21,39 @@ function App() {
     setIsLoggedIn(true);
     setRole(userRole);
     setUserName(userName);
-
+    storeInSession(userRole,userName);
   }, []);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setRole("");
+    setUserName("");
+    clearSession();
   }, []);
 
-  let sessionIsLoggedIn = sessionStorage.getItem("isLoggedIn");
-  let sessionRole = sessionStorage.getItem("role");
-  let sessionUserName = sessionStorage.getItem("userName");
-
-  if (sessionIsLoggedIn && sessionRole && sessionUserName) {
-    auth.login(sessionRole, sessionUserName);
+  const storeInSession = (sessionRole,SessionName) => {
+    sessionStorage.setItem("userName", SessionName);
+    sessionStorage.setItem("isLoggedIn", true);
+    sessionStorage.setItem("role", sessionRole);
   }
+
+  const clearSession = () => {
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("role");
+  }
+
+  useEffect(() => {
+    let sessionIsLoggedIn = sessionStorage.getItem("isLoggedIn");
+    let sessionRole = sessionStorage.getItem("role");
+    let sessionUserName = sessionStorage.getItem("userName");
+
+    if (sessionIsLoggedIn && sessionRole && sessionUserName) {
+      setIsLoggedIn(sessionIsLoggedIn);
+      setRole(sessionRole);
+      setUserName(sessionUserName);
+    }
+  }, [])
 
   return (
     <AuthContext.Provider value={{
@@ -45,7 +64,6 @@ function App() {
       logout: logout
     }}>
       <BrowserRouter>
-        <span>Welcome {userName} to the library</span>
         <Switch>
           <Route path="/home" exact component={HomePage} />
 

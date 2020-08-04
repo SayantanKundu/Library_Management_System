@@ -13,13 +13,17 @@ const ViewBooks = () => {
     }, [])
 
     return (
-        <div className="book-container">
-            {booklist.map(book => {
-                return (<React.Fragment>
-                    <BookCard key={book._id} bookInfo={book}></BookCard>
-                </React.Fragment>)
-            })
-            }
+        <div>
+            <h1>Book Repository</h1>
+
+            <div className="book-container">
+                {booklist.map(book => {
+                    return (<React.Fragment>
+                        <BookCard key={book._id} bookInfo={book}></BookCard>
+                    </React.Fragment>)
+                })
+                }
+            </div>
         </div>
     )
 }

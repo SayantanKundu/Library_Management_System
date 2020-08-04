@@ -23,6 +23,7 @@ const BookCard = (props) => {
             })
             .then(response => {
                 alert(response.data.message);
+                window.location.reload();
             }).catch(err => {
                 alert(err.response.data.message);
             })
@@ -37,6 +38,7 @@ const BookCard = (props) => {
             })
             .then(response => {
                 alert(response.data.message);
+                window.location.reload();
             })
             .catch(err => {
                 alert(err.response.data.message);

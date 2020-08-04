@@ -41,7 +41,6 @@ exports.loginUser = (req, res, next) => {
     let { userField, password, role } = req.query;
     User.findOne({ userName: userField })
         .then(user => {
-            console.log(user);
             if (user !== null) {
                 if (user.isAdmin === true && role === 'admin') {
                     if (user.password === password) {

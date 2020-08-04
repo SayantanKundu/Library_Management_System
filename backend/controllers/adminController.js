@@ -30,7 +30,6 @@ exports.getBookrequest = (req, res, next) => {
 
 exports.issueBook = (req, res, next) => {
     let { userName, bookId, bookName, issueId } = req.body;
-    console.log(issueId);
 
     let cuurentDate = new Date();
 
@@ -69,7 +68,6 @@ exports.issueBook = (req, res, next) => {
                 })
         })
         .catch(err => {
-            console.log(err);
             return next(new HttpError('Internal server error', 500));
         });
 }

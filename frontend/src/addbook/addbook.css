@@ -1,0 +1,11 @@
+.main-container{
+    height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input,select { display: table-cell; }

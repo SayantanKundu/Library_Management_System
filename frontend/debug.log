@@ -1,0 +1,2 @@
+[0807/001041.177:ERROR:process_info.cc(329)] VirtualQueryEx: Access is denied. (0x5)
+[0807/001043.245:ERROR:process_info.cc(556)] ReadMemoryInfo failed

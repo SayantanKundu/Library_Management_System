@@ -6,10 +6,28 @@ import './viewbooks.css';
 const ViewBooks = () => {
     const [booklist, setBooklist] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:4001/api/user/books')
+
+        //using REST
+
+        // axios.get('http://localhost:4001/api/user/books')
+        //     .then(response => {
+        //         setBooklist(response.data.result);
+        //     })
+
+
+        //using graphql
+        axios.post('http://localhost:4001/graphql',
+            {
+                query: `{
+                    getBookData{bookDetails{name author available}}
+                }`
+            }
+        )
             .then(response => {
-                setBooklist(response.data.result);
+                setBooklist(response.data.data.getBookData.bookDetails);
             })
+
+
     }, [])
 
     return (

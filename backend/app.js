@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { graphqlHTTP } = require('express-graphql')
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolver');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +24,12 @@ app.use((req, res, next) => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
+
+app.use('/graphql',graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true
+}))
 
 app.use((error, req, res, next) => {
     if (res.headerSent) {
